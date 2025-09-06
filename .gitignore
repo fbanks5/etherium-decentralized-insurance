@@ -1,0 +1,31 @@
+# Node dependencies
+node_modules/
+.cache/
+dist/
+build/
+
+# Hardhat artifacts and cache
+artifacts/
+cache/
+deployments/
+
+# Frontend build (if using React, Vite, etc.)
+frontend/build/
+frontend/dist/
+frontend/node_modules/
+
+# OS-generated files
+.DS_Store
+
+# IDE/editor settings
+.vscode/
+.idea/
+
+# Environment variables and secrets
+.env
+.env.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

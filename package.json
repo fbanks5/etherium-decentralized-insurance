@@ -1,0 +1,29 @@
+{
+  "name": "decentralized-insurance-dapp",
+  "version": "1.0.0",
+  "description": "A decentralized insurance dApp build with Solidity, Hardhat, and Ethers.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx hardhat test",
+    "compile": "npx hardhat compile",
+    "node": "npx hardhat node",
+    "deploy": "npx hardhat run scripts/deploy.js --network localhost"
+  },
+  "keywords": [
+    "blockchain",
+    "insurance",
+    "solidity",
+    "hardhat",
+    "smart-contract"
+  ],
+  "author": "Frantz Banks III",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
+    "dotenv": "^16.3.1",
+    "hardhat": "^2.26.3"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.4.0"
+  }
+}
