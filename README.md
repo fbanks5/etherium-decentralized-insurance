@@ -87,7 +87,7 @@ Ensure MetaMask is:
 
 **Frantz Banks III**  
 Application Security Engineer | Blockchain Developer  
-[linkedin.com/in/](frantz-banks-iii-m-s-726bb6149)
+[linkedin.com/in/]([frantz-banks-iii-m-s-726bb6149](https://www.linkedin.com/in/frantz-banks-iii-m-s-726bb6149/))
 
 ## ⚠️ Disclaimer
 
