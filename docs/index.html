@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Decentralized Insurance dApp</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/a2e8f0a7ae.js"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family: "Inter", sans-serif;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        margin: 0;
+        padding: 1rem;
+        background: linear-gradient(
+          135deg,
+          #667eea 0%,
+          #764ba2 25%,
+          #f093fb 50%,
+          #f5576c 75%,
+          #4facfe 100%
+        );
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+        color: #fff;
+        transition: background 0.3s, color 0.3s;
+      }
+
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+      .dark-mode {
+        background: #1c1c1e;
+        color: #f5f5f7;
+      }
+      .container {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      h1,
+      h2 {
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+      .card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+        transition: background 0.3s, color 0.3s;
+      }
+      .dark-mode .card {
+        background: #2c2c2e;
+      }
+      button {
+        background: linear-gradient(135deg, #4caf50, #81c784);
+        border: none;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-size: 1rem;
+        margin: 0.5rem;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      }
+      input[type="text"],
+      input[type="number"] {
+        width: 100%;
+        padding: 0.5rem;
+        margin: 0.5rem 0 1rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 1rem;
+      }
+      #claimInfo {
+        margin-top: 1rem;
+        font-size: 0.95rem;
+        background-color: #f1f8e9;
+        padding: 1rem;
+        border-radius: 8px;
+      }
+      footer {
+        text-align: center;
+        font-size: 0.9rem;
+        padding-top: 1rem;
+      }
+      .toggle-mode {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        cursor: pointer;
+        font-size: 1.5rem;
+        color: #333;
+        transition: color 0.3s;
+      }
+      @media (max-width: 600px) {
+        .container {
+          padding: 1rem;
+        }
+        button {
+          width: 100%;
+          margin: 0.5rem 0;
+        }
+      }
+      .enhanced-button {
+        background: linear-gradient(
+          135deg,
+          #667eea 0%,
+          #764ba2 25%,
+          #f093fb 50%,
+          #f5576c 75%,
+          #4facfe 100%
+        );
+        background-size: 200% 200%;
+        border: none;
+        border-radius: 0.75rem;
+        padding: 0.875rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        color: white;
+      }
+
+      .enhanced-card {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 1.5rem;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      .enhanced-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+      }
+
+      .hero {
+        text-align: center;
+        padding: 4rem 1rem;
+      }
+
+      .typography-display {
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: #fff;
+      }
+
+      .typography-body-large {
+        font-size: 1.25rem;
+        color: #e0e0e0;
+        margin-top: 1rem;
+      }
+
+      .glow-purple {
+        box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+      }
+
+      .icon-floating {
+        animation: iconFloat 3s ease-in-out infinite;
+      }
+
+      @keyframes iconFloat {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-5px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+
+      .icon-interactive:hover {
+        transform: scale(1.1);
+        color: #9333ea;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="hero">
+      <h1 class="typography-display">Decentralized Insurance</h1>
+      <p class="typography-body-large">
+        Protect. Claim. Govern. Own your peace of mind on-chain.
+      </p>
+    </header>
+    <div class="container">
+      <span
+        class="toggle-mode enhanced-button"
+        onclick="toggleDarkMode()"
+        style="position: fixed; top: 1rem; right: 1rem; z-index: 999"
+      >
+        🌓 Toggle Mode
+      </span>
+      <!-- <h1><i class="fas fa-shield-alt"></i> Decentralized Insurance dApp</h1> -->
+
+      <div class="card enhanced-card" id="policySummaryCard">
+        <h2><i class="fas fa-chart-pie"></i> Policy Summary</h2>
+        <div style="display: flex; justify-content: space-around">
+          <div>
+            <h3 id="totalPolicies">0</h3>
+            <p>Total Policies</p>
+          </div>
+          <div>
+            <h3 id="activePolicies">0</h3>
+            <p>Active</p>
+          </div>
+          <div>
+            <h3 id="inactivePolicies">0</h3>
+            <p>Inactive</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card enhanced-card">
+        <h2><i class="fas fa-wallet"></i> Wallet Connection</h2>
+        <button class="enhanced-button" id="connectWalletBtn">
+          🔗 Connect Wallet
+        </button>
+        <p id="walletStatus">Wallet not connected</p>
+        <p id="contractStatus">Contract not loaded</p>
+      </div>
+
+      <div class="card enhanced-card">
+        <h2><i class="fas fa-shopping-cart"></i> Buy Insurance Policy</h2>
+        <button class="enhanced-button" onclick="checkPolicyCount()">
+          🔍 Check Policy Count
+        </button>
+        <button class="enhanced-button" onclick="buyPolicy()">
+          💳 Purchase Policy
+        </button>
+      </div>
+
+      <div class="card enhanced-card">
+        <h2><i class="fas fa-file-alt"></i> File a Claim</h2>
+        <input type="text" id="claimReason" placeholder="Enter claim reason" />
+        <button class="enhanced-button" onclick="fileClaim()">📝 Submit</button>
+      </div>
+
+      <div class="card enhanced-card">
+        <h2><i class="fas fa-eye"></i> View Claim</h2>
+        <input type="number" id="claimId" placeholder="Enter claim ID" />
+        <button class="enhanced-button" onclick="viewClaim()">
+          📄 Claim Status
+        </button>
+        <div id="claimInfo"></div>
+      </div>
+
+      <div class="card enhanced-card">
+        <h2><i class="fas fa-eye"></i>Assess Claim</h2>
+        <input type="number" id="assessClaimId" placeholder="Enter claim ID" />
+        <br />
+        <button
+          class="enhanced-button"
+          onclick="assessClaim(parseInt(document.getElementById('assessClaimId').value), true)"
+        >
+          Approve
+        </button>
+        <button
+          class="enhanced-button"
+          onclick="assessClaim(parseInt(document.getElementById('assessClaimId').value), false)"
+        >
+          Reject
+        </button>
+        <button class="enhanced-button" onclick="payClaim()">Pay Claim</button>
+        <button class="enhanced-button" onclick="viewClaimHistory()">
+          View My Claims
+        </button>
+        <ul id="claimsList"></ul>
+      </div>
+
+      <div class="card enhanced-card">
+        <h2><i class="fas fa-list"></i> My Insurance Policies</h2>
+        <button class="enhanced-button" onclick="viewUserPolicies()">
+          View My Policies
+        </button>
+        <ul id="policiesList"></ul>
+      </div>
+
+      <footer>
+        <hr />
+        <p>Frantz Banks III • 2025 • Ethereum Localhost</p>
+      </footer>
+    </div>
+
+    <script>
+      function toggleDarkMode() {
+        document.body.classList.toggle("dark-mode");
+      }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js"></script>
+    <script src="script_new.js"></script>
+  </body>
+</html>
