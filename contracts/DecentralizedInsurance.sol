@@ -37,6 +37,14 @@ contract DecentralizedInsurance is AccessControl, ReentrancyGuard, Pausable {
         mapping(address => bool) isMember;
     }
 
+    struct Policy {
+        uint256 id;
+        uint256 poolId;
+        uint256 premiumPaid;
+        uint256 timestamp;
+        bool isActive;
+    }
+
     struct Claim {
         address claimant;
         uint256 poolId;
@@ -54,6 +62,8 @@ contract DecentralizedInsurance is AccessControl, ReentrancyGuard, Pausable {
 
     mapping(uint256 => InsurancePool) public insurancePools;
     mapping(uint256 => Claim) public claims;
+    mapping(address => Policy[]) public userPolicies;
+    mapping(address => uint256[]) private userClaimIds;
     uint256 public poolCount;
     uint256 public claimCount;
     uint256 public minAssessorVotes;
@@ -69,6 +79,7 @@ contract DecentralizedInsurance is AccessControl, ReentrancyGuard, Pausable {
     event FundsPaid(uint256 indexed claimId, address indexed recipient, uint256 amount);
     event AssessorAdded(address indexed assessor);
     event AssessorRemoved(address indexed assessor);
+    event PolicyCreated(address indexed user, uint256 poolId, uint256 premium);
 
     modifier onlyPoolMember(uint256 _poolId) {
         if (!insurancePools[_poolId].isMember[msg.sender]) revert NotPoolMember();
@@ -100,6 +111,14 @@ contract DecentralizedInsurance is AccessControl, ReentrancyGuard, Pausable {
         _;
     }
 
+    modifier canJoinPool(uint256 _poolId) {
+        InsurancePool storage pool = insurancePools[_poolId];
+        if (!pool.active) revert PoolNotActive();
+        if (pool.isMember[msg.sender]) revert AlreadyMember();
+        if (msg.value < pool.minimumContribution) revert InsufficientFunds();
+        _;
+    }
+
     constructor() {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(ADMIN_ROLE, msg.sender);
@@ -123,18 +142,26 @@ contract DecentralizedInsurance is AccessControl, ReentrancyGuard, Pausable {
         emit PoolCreated(poolId, _name, _minimumContribution);
     }
 
-    function joinPool(uint256 _poolId) external payable nonReentrant whenNotPaused {
+    function joinPool(uint256 _poolId) external payable nonReentrant whenNotPaused canJoinPool(_poolId) {
         InsurancePool storage pool = insurancePools[_poolId];
-        if (!pool.active) revert PoolNotActive();
-        if (pool.isMember[msg.sender]) revert AlreadyMember();
-        if (msg.value < pool.minimumContribution) revert InsufficientFunds();
 
         pool.contributions[msg.sender] = msg.value;
         pool.totalFunds += msg.value;
         pool.memberCount++;
         pool.isMember[msg.sender] = true;
 
+        userPolicies[msg.sender].push(
+            Policy({
+                id: userPolicies[msg.sender].length,
+                poolId: _poolId,
+                premiumPaid: msg.value,
+                timestamp: block.timestamp,
+                isActive: true
+            })
+        );
+
         emit MemberJoined(_poolId, msg.sender, msg.value);
+        emit PolicyCreated(msg.sender, _poolId, msg.value);
     }
 
     function submitClaim(uint256 _poolId, uint256 _amount, string memory _description)
@@ -150,6 +177,8 @@ contract DecentralizedInsurance is AccessControl, ReentrancyGuard, Pausable {
         claim.description = _description;
         claim.timestamp = block.timestamp;
         claim.status = ClaimStatus.Pending;
+
+        userClaimIds[msg.sender].push(claimId);
 
         emit ClaimSubmitted(claimId, msg.sender, _poolId);
     }
@@ -284,8 +313,16 @@ contract DecentralizedInsurance is AccessControl, ReentrancyGuard, Pausable {
         return insurancePools[_poolId].contributions[_member];
     }
 
+    function getPolicyCountForAddress(address _user) public view returns (uint256) {
+        return userPolicies[_user].length;
+    }
+
     function hasAssessorVoted(uint256 _claimId, address _assessor) external view validClaimId(_claimId) returns (bool) {
         return claims[_claimId].assessorVotes[_assessor];
+    }
+
+    function getPoliciesByUser(address _user) external view returns (Policy[] memory) {
+        return userPolicies[_user];
     }
 
     function renounceRole(bytes32 role, address account) public override {
@@ -300,5 +337,13 @@ contract DecentralizedInsurance is AccessControl, ReentrancyGuard, Pausable {
         pool.totalFunds = 0;
         (bool success, ) = payable(msg.sender).call{value: amount}("");
         require(success, "Emergency withdrawal failed");
+    }
+
+    function getClaimIdsByUser(address user) external view returns (uint256[] memory) {
+        return userClaimIds[user];
+    }
+
+    receive() external payable {
+        revert("Please use joinPool()");
     }
 }
